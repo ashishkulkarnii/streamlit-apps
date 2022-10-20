@@ -47,15 +47,20 @@ if choice == "Contrast":
         # toggle edited/original image button
         edited = st.checkbox("Show edited image", key="enabled")
 
+        if c_slider != 0:
+            edited_image = contrast(im, c_slider)
+        else:
+            edited_image = im
+        
         # display image
         if(edited) and c_slider != 0:
-            st.image(contrast(im, c_slider), caption=uploaded_file.name)
+            st.image(edited_image, caption=uploaded_file.name)
         else:
             st.image(im, caption=uploaded_file.name)
 
         # download edited button
         if c_slider != 0:
-            contrast(im, c_slider).save(buf, format="JPEG")
+            edited_image.save(buf, format="JPEG")
         else:
             im.save(buf, format="JPEG")
         byte_im = buf.getvalue()
