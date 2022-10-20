@@ -17,6 +17,7 @@ def validate(val):
 
 
 def contrast(im, val):  # for val ∈ [-100, 100]
+    # progress_bar = st.progress(0) # progress bar slows down code by over 10x
     im = np.array(im)
     for i in range(len(im)):
         for j in range(len(im[0])):
@@ -24,11 +25,24 @@ def contrast(im, val):  # for val ∈ [-100, 100]
             im[i][j][0] = validate(f * (im[i][j][0] - 128) + 128)  # r
             im[i][j][1] = validate(f * (im[i][j][1] - 128) + 128)  # g
             im[i][j][2] = validate(f * (im[i][j][2] - 128) + 128)  # b
+            # progress_bar.progress((i) / len(im))
+    im = Image.fromarray(im)
+    # progress_bar.empty()
+    return im
+
+
+def brightness(im, val):  # for val ∈ [-100, 100]
+    im = np.array(im)
+    for i in range(len(im)):
+        for j in range(len(im[0])):
+            im[i][j][0] = validate(im[i][j][0] + val*(255/100))  # r
+            im[i][j][1] = validate(im[i][j][1] + val*(255/100))  # g
+            im[i][j][2] = validate(im[i][j][2] + val*(255/100))  # b
     im = Image.fromarray(im)
     return im
 
 
-menu = ["Contrast", "Help"]
+menu = ["Contrast", "Brightness", "Help"]
 choice = st.sidebar.selectbox("Menu", menu)
 
 if choice == "Contrast":
@@ -45,7 +59,7 @@ if choice == "Contrast":
         c_slider = st.slider("Select contrast value", -100, 100, 0)
 
         # toggle edited/original image button
-        edited = st.checkbox("Show edited image", key="enabled")
+        edited = st.checkbox("Show edited image", value=True)
 
         if c_slider != 0:
             edited_image = contrast(im, c_slider)
@@ -60,6 +74,46 @@ if choice == "Contrast":
 
         # download edited button
         if c_slider != 0:
+            edited_image.save(buf, format="JPEG")
+        else:
+            im.save(buf, format="JPEG")
+        byte_im = buf.getvalue()
+        btn = st.download_button(
+            label="Download edited image",
+            data=byte_im,
+            file_name=uploaded_file.name,
+            mime=uploaded_file.type
+        )
+
+if choice == "Brightness":
+    st.subheader("Brightness")
+
+    # file upload widget
+    uploaded_file = st.file_uploader(
+        "Upload your image", type=["jpg", "jpeg"])
+    if uploaded_file is not None:
+        # if image uploaded, convert to PIL Image
+        im = Image.open(uploaded_file)
+
+        # contrast slider
+        b_slider = st.slider("Select contrast value", -100, 100, 0)
+
+        # toggle edited/original image button
+        edited = st.checkbox("Show edited image", value=True)
+
+        if b_slider != 0:
+            edited_image = contrast(im, b_slider)
+        else:
+            edited_image = im
+        
+        # display image
+        if(edited) and b_slider != 0:
+            st.image(edited_image, caption=uploaded_file.name)
+        else:
+            st.image(im, caption=uploaded_file.name)
+
+        # download edited button
+        if b_slider != 0:
             edited_image.save(buf, format="JPEG")
         else:
             im.save(buf, format="JPEG")
