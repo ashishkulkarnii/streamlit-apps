@@ -65,7 +65,7 @@ if choice == "Contrast":
             edited_image = contrast(im, c_slider)
         else:
             edited_image = im
-        
+
         # display image
         if(edited) and c_slider != 0:
             st.image(edited_image, caption=uploaded_file.name)
@@ -105,7 +105,7 @@ if choice == "Brightness":
             edited_image = contrast(im, b_slider)
         else:
             edited_image = im
-        
+
         # display image
         if(edited) and b_slider != 0:
             st.image(edited_image, caption=uploaded_file.name)
