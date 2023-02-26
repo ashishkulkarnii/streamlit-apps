@@ -96,7 +96,7 @@ if choice == "Brightness":
         im = Image.open(uploaded_file)
 
         # contrast slider
-        b_slider = st.slider("Select contrast value", -100, 100, 0)
+        b_slider = st.slider("Select brightness value", -100, 100, 0)
 
         # toggle edited/original image button
         edited = st.checkbox("Show edited image", value=True)
