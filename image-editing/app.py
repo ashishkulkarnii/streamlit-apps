@@ -102,7 +102,7 @@ if choice == "Brightness":
         edited = st.checkbox("Show edited image", value=True)
 
         if b_slider != 0:
-            edited_image = contrast(im, b_slider)
+            edited_image = brightness(im, b_slider)
         else:
             edited_image = im
 
